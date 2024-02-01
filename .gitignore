@@ -1,0 +1,35 @@
+# Byte-compiled Python bytecode
+__pycache__/
+
+# Distribution artifacts
+.eggs
+.dist
+build/
+bin/
+develop/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+wheelhouse/
+
+# Installer logs
+pip-log.txt
+pip-debug.log
+
+# Pytest
+.pytest_cache/
+.pytest_profile/
+.pytest_*.ini
+
+# Sphinx
+docs/_build/
+docs/Thumbs.db
+docs/.DS_Store
+
+# Virtual environments
+venv/
+
+# Environmental Variables
+.env
