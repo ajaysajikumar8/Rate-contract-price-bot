@@ -19,9 +19,9 @@ def search_product(driver, website, product):
 
     if website["url"] == "https://www.amazon.in":
         if 'AdHolder' not in first_item.get_attribute('class'):
-            product_name_element = wait_and_get_element_by_class_name(driver, website["product_name_locator"][1])
+            product_name_element = wait_and_get_element_by_class_name_relative(first_item, website["product_name_locator"][1])
             product_name = product_name_element.text
-            price_element = wait_and_get_element_by_class_name(driver, website["price_locator"][1])
+            price_element = wait_and_get_element_by_class_name_relative(first_item, website["price_locator"][1])
             price = price_element.text if price_element else 'Price not found' 
         else:
             print("The first item is sponsored. Looking for a non-sponsored element.")
