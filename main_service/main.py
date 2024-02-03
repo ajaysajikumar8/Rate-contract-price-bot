@@ -3,9 +3,9 @@ from flask import Flask, request, jsonify
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from dotenv import load_dotenv
+from concurrent.futures import ThreadPoolExecutor
 from websites import websites
 from search_product import search_product
-from find_similar_item import find_similar_item
 import os
 import logging
 
@@ -26,35 +26,28 @@ for key, value in headers.items():
 
 app = Flask(__name__)
 
-def scrape_website(driver, website_info, product_name):
-    site, product, price = search_product(
-        driver,
-        website_info,
-        product_name
-    )
-    return site, product, price
+def scrape_website(args_tuple):
+    website_info, product_name = args_tuple
+    with webdriver.Chrome(options=chrome_options) as driver:
+        site, product, price = search_product(driver, website_info, product_name)
+    return {'website': site, 'product': product, 'price': price}
+
+def create_webdriver():
+    return webdriver.Chrome(options=chrome_options)
+
+def parallel_scrape(product_name):
+    with ThreadPoolExecutor() as executor:
+        scrape_args = ((website_info, product_name) for website_info in websites)
+        results = executor.map(scrape_website, scrape_args)
+
+    return list(results)
 
 @app.route('/search_product', methods=['POST'])
 def search_product_route():
     data = request.get_json()
     product_name = data.get('product_name')
 
-    driver = webdriver.Chrome(options=chrome_options)
-
-    try:
-        print("Hey")
-        results = []
-        for website_info in websites:
-            site, product, price = scrape_website(driver, website_info, product_name)
-            print(site, product, price)
-            result = {
-                "website": site,
-                "product": product,
-                "price": price
-            }
-            results.append(result)
-    finally:
-        driver.quit()
+    results = parallel_scrape(product_name)
 
     return jsonify(results)
 

@@ -1,7 +1,6 @@
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
 from utils import wait_and_get_element_by_class_name_relative, wait_and_get_element_by_xpath_relative, setup_logging
-import time
 import logging
 from fuzzywuzzy import fuzz
 
@@ -53,7 +52,7 @@ def find_similar_item(website, product, first_item):
             logging.debug(
                 f'NoSuchElementException: {e}, Website: {website["url"]}, Product: {product}'
             )
-            print("Skipping the current item due to NoSuchElementException.")
+            logging.info("Skipping the current item due to NoSuchElementException.")
             pass
 
         try:
