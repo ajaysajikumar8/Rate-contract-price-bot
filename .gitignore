@@ -33,3 +33,6 @@ venv/
 
 # Environmental Variables
 .env
+
+# LOG Files
+logs
