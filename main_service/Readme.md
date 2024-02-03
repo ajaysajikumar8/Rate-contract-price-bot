@@ -1,10 +1,5 @@
 # Project Documentation: Product Price Fetcher
 
-## Go Back
-
-[Back to Root Documentation](../README.md)
-
-
 ## Table of Contents
 
 1. [Introduction](#introduction)
