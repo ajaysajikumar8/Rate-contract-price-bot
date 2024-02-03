@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+</head>
+<body>
+    <h1>Search Results</h1>
+    {% for result in results %}
+        <h2>Price in website: {{result.website}}</h2>
+        <p>Product: <strong>{{ result.product }} </strong></p>
+        <p>Price: <strong>{{ result.price }}</strong></p>
+    {% endfor %}
+</body>
+</html>
