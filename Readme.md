@@ -19,8 +19,11 @@
     - [5. websites.py](#5-websitespy)
 6. [Logging](#logging)
 7. [Error Handling](#error-handling)
-8. [Future Enhancements](#future-enhancements)
-9. [Conclusion](#conclusion)
+8. [Search Algorithm](#search-algorithm)
+    - [Similarity Score Calculation](#similarity-score-calculation)
+    - [Handling Similarity Score in Results](#handling-similarity-score-in-results)
+9. [Future Enhancements](#future-enhancements)
+10. [Conclusion](#conclusion)
 
 ---
 
@@ -83,7 +86,7 @@ The project follows a modular structure with the following main files:
 2. **search_product.py**: Handles the search functionality on e-commerce websites.
 3. **find_similar_item.py**: Finds the most similar item based on product names.
 4. **utils.py**: Contains utility functions used across multiple modules.
-5. **websites.py**: Stores information about various e-commerce websites.
+5. **websites.py**: Stores information about various e-commerce websites, including URLs and locators.
 
 ---
 
@@ -128,6 +131,18 @@ The script handles exceptions such as `NoSuchElementException` and `TimeoutExcep
 
 ---
 
+## Search Algorithm
+
+### Similarity Score Calculation
+
+The similarity score between the searched product and the retrieved product names is calculated using the FuzzyWuzzy library. This score helps determine the closeness of the match.
+
+### Handling Similarity Score in Results
+
+The project considers the similarity score when presenting search results. If the similarity score is above a certain threshold (e.g., 50%), the script considers it a potential match. This allows for flexibility, enabling the retrieval of products with varying levels of name similarity.
+
+---
+
 ## Future Enhancements
 
 ### 1. Exposing as a Service
@@ -144,7 +159,9 @@ Address the challenge of CAPTCHA verification when encountered during scraping. 
 
 ### 4. Enhanced Exception Handling
 
-Implement more advanced exception handling to gracefully manage various scenarios. Enhance the error reporting and recovery mechanisms to ensure robustness in the face of unexpected issues during web scraping. This will contribute to a more reliable and resilient application.
+Implement more advanced exception handling to gracefully manage various scenarios. Enhance the error reporting and recovery mechanisms to ensure robustness in the face of unexpected issues during
+
+ web scraping. This will contribute to a more reliable and resilient application.
 
 ### 5. Parallelization
 

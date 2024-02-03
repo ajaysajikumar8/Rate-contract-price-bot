@@ -1,10 +1,17 @@
-# utils.py
+import os
+import logging
 from selenium.webdriver.support.ui import WebDriverWait 
 from selenium.webdriver.support import expected_conditions as EC 
 from selenium.webdriver.common.by import By
 
+def setup_logging(log_file_name):
+    logs_dir = 'logs'
+    os.makedirs(logs_dir, exist_ok=True)
+    log_file_path = os.path.join(logs_dir, log_file_name)
+    logging.basicConfig(filename=log_file_path, level=logging.INFO)
+
 def wait_and_get_element(driver, locator):
-    return WebDriverWait(driver, 10).until(
+    return WebDriverWait(driver, 20).until(
         EC.presence_of_element_located(locator)
     )
 

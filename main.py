@@ -5,6 +5,9 @@ from dotenv import load_dotenv
 from websites import websites
 from search_product import search_product
 import os
+from utils import setup_logging
+
+setup_logging('main.log')
 
 chrome_options = Options()
 load_dotenv()
