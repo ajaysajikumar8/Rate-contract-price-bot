@@ -4,3 +4,4 @@ lxml
 selenium
 python_dotenv
 fuzzywuzzy
+flask
