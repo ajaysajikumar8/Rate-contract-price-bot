@@ -22,8 +22,9 @@
 8. [Search Algorithm](#search-algorithm)
     - [Similarity Score Calculation](#similarity-score-calculation)
     - [Handling Similarity Score in Results](#handling-similarity-score-in-results)
-9. [Future Enhancements](#future-enhancements)
-10. [Conclusion](#conclusion)
+9. [Parallel Scraping](#parallel-scraping)
+10. [Future Enhancements](#future-enhancements)
+11. [Conclusion](#conclusion)
 
 ---
 
@@ -143,37 +144,51 @@ The project considers the similarity score when presenting search results. If th
 
 ---
 
+## Parallel Scraping
+
+### Parallel Scraping Function (parallel_scrape)
+
+A new function parallel_scrape was introduced to handle the parallel scraping of websites. It utilizes the ThreadPoolExecutor from the concurrent.futures module, which allows concurrent execution of functions using threads. The function takes the product name as an argument and uses a thread pool to execute the scrape_website function for each website concurrently.
+
+### Concurrency and Performance
+
+By using threads, the function achieves concurrency, allowing multiple websites to be scraped simultaneously. This is beneficial when dealing with I/O-bound tasks, such as web scraping, where the program often waits for external resources (like web pages to load
+
+). While one thread is waiting for a response from a website, other threads can continue working, leading to improved overall efficiency.
+
+### Thread Safety
+
+Each thread in the pool executes the scrape_website function independently with its own set of arguments. Thread safety is maintained by ensuring that shared resources (like the webdriver instance) are properly managed. In this case, the webdriver is created and used within the scrape_website function.
+
+### Benefits
+
+- Parallel processing reduces the time it takes to scrape information from multiple websites compared to sequential processing.
+- It enhances the efficiency of the web scraping application, especially when dealing with a large number of websites.
+
+---
+
+Certainly! Given that Flask integration has already been implemented, I'll make the necessary adjustment in the Future Enhancements section to exclude Flask integration. Here's the updated section:
+
+---
+
 ## Future Enhancements
 
-### 1. Exposing as a Service
 
-Consider transforming the product price scraping module into a service that can be accessed by external applications. This can be achieved by integrating the script with a web framework like Flask to expose API endpoints. It enables external applications to send requests and receive product prices programmatically.
-
-### 2. Flask Integration
-
-Integrate Flask to create a web service around the existing functionality. Flask can handle incoming HTTP requests, allowing external applications to interact with the product price scraping functionality. This enhances the modularity and extensibility of the application.
-
-### 3. Handling CAPTCHA Verification
+### 1. Handling CAPTCHA Verification
 
 Address the challenge of CAPTCHA verification when encountered during scraping. Implement mechanisms to detect and handle CAPTCHAs gracefully. Potential solutions include using CAPTCHA solving services or incorporating CAPTCHA-solving libraries to automate the verification process.
 
-### 4. Enhanced Exception Handling
+### 2. Enhanced Exception Handling
 
-Implement more advanced exception handling to gracefully manage various scenarios. Enhance the error reporting and recovery mechanisms to ensure robustness in the face of unexpected issues during
+Implement more advanced exception handling to gracefully manage various scenarios. Enhance the error reporting and recovery mechanisms to ensure robustness in the face of unexpected issues during web scraping. This will contribute to a more reliable and resilient application.
 
- web scraping. This will contribute to a more reliable and resilient application.
-
-### 5. Parallelization
-
-Explore parallelization techniques to optimize the scraping process, especially when dealing with multiple websites. Parallel execution of scraping tasks can significantly improve the overall performance and efficiency of the application.
-
-### 6. Security Considerations
-
-Introduce security measures to protect against potential vulnerabilities. When exposing the module as a service, implement authentication mechanisms, secure endpoints, and data encryption to ensure the confidentiality and integrity of the communication between the external applications and the module.
-
-### 7. Scalability
+### 3. Scalability
 
 Optimize the codebase for scalability to handle an increasing number of requests. Consider containerization technologies like Docker for easy deployment and scaling of the application.
+
+### 4. Security Considerations
+
+Introduce security measures to protect against potential vulnerabilities. When exposing the module as a service, implement authentication mechanisms, secure endpoints, and data encryption to ensure the confidentiality and integrity of the communication between the external applications and the module.
 
 ---
 

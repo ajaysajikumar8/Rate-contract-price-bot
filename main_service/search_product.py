@@ -15,7 +15,7 @@ def search_product(driver, website, product):
         search_bar.clear()
         search_bar.send_keys(product)
         search_bar.send_keys(Keys.RETURN)
-        
+
         try:
             first_item = wait_and_get_element(driver, website["first_item_locator"])
         except NoSuchElementException as e:
@@ -25,13 +25,13 @@ def search_product(driver, website, product):
             print("First Element not found")
             return website["url"], "No matching product found", "Price not found"
 
+        # Pass the first_item argument when calling find_similar_item
         site, product_name, price = find_similar_item(website, product, first_item)
 
         return site, product_name, price
     
     except TimeoutException as e:
-        logging.debug(
+        logging.error(
             f"TimeoutException occurred while trying to fetch product name on {website['url']}."
         )
-        print("Timeout")
         return website["url"], "No matching product found", "Price not found"
