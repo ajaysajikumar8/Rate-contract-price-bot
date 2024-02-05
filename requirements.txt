@@ -6,3 +6,4 @@ python_dotenv
 fuzzywuzzy
 flask
 python-Levenshtein
+fake_useragent
