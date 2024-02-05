@@ -71,13 +71,37 @@ python main.py
 
 ### Input
 
-- Enter the product you are searching for when prompted.
+The Product Price Fetcher requires input in the form of a JSON object containing the following key:
+
+- `product_name`: The name of the product you are searching for.
+
+Example Input:
+
+```json
+{
+  "product_name": "Smartphone"
+}
+```
 
 ### Output
 
 The script will display the prices for the specified product on different websites.
 
----
+
+```json
+[
+  {
+    "website": "https://www.example1.com",
+    "product": "Smartphone Model X",
+    "price": "$499.99"
+  },
+  {
+    "website": "https://www.example2.com",
+    "product": "Super Smartphone",
+    "price": "$449.99"
+  },
+]
+```
 
 ## Project Structure
 
@@ -152,9 +176,7 @@ A new function parallel_scrape was introduced to handle the parallel scraping of
 
 ### Concurrency and Performance
 
-By using threads, the function achieves concurrency, allowing multiple websites to be scraped simultaneously. This is beneficial when dealing with I/O-bound tasks, such as web scraping, where the program often waits for external resources (like web pages to load
-
-). While one thread is waiting for a response from a website, other threads can continue working, leading to improved overall efficiency.
+By using threads, the function achieves concurrency, allowing multiple websites to be scraped simultaneously. This is beneficial when dealing with I/O-bound tasks, such as web scraping, where the program often waits for external resources (like web pages to load). While one thread is waiting for a response from a website, other threads can continue working, leading to improved overall efficiency.
 
 ### Thread Safety
 
@@ -167,12 +189,7 @@ Each thread in the pool executes the scrape_website function independently with 
 
 ---
 
-Certainly! Given that Flask integration has already been implemented, I'll make the necessary adjustment in the Future Enhancements section to exclude Flask integration. Here's the updated section:
-
----
-
 ## Future Enhancements
-
 
 ### 1. Handling CAPTCHA Verification
 
