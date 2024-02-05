@@ -5,3 +5,4 @@ selenium
 python_dotenv
 fuzzywuzzy
 flask
+python-Levenshtein

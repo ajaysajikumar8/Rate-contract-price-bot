@@ -1,23 +1,32 @@
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
-from utils import wait_and_get_element_by_class_name_relative, wait_and_get_element_by_xpath_relative, setup_logging
+from utils import (
+    wait_and_get_element_by_class_name_relative,
+    wait_and_get_element_by_xpath_relative,
+    setup_logging,
+)
 import logging
 from fuzzywuzzy import fuzz
-
+import time
 
 setup_logging("find_similar_item.log")
+
 
 def find_similar_item(website, product, first_item):
     max_similarity_score = 0
     max_similarity_item = None
     sibling_item = first_item
 
-    class_names_set1 = website["product_name_locator"][0][1]
-    class_names_set2 = website["product_name_locator"][1][1]
+    # List of sets of class names
+    class_names_sets = [
+        website_info[1] for website_info in website["product_name_locator"]
+    ]
 
     def get_product_name_element(sibling_item, class_names):
         try:
-            return wait_and_get_element_by_class_name_relative(sibling_item, class_names)
+            return wait_and_get_element_by_class_name_relative(
+                sibling_item, class_names
+            )
         except NoSuchElementException as e:
             logging.debug(
                 f'NoSuchElementException: {e}, Website: {website["url"]}, Product: {product}'
@@ -26,57 +35,80 @@ def find_similar_item(website, product, first_item):
 
     def get_price_element(item):
         try:
-            return wait_and_get_element_by_class_name_relative(item, website["price_locator"][1])
+            return wait_and_get_element_by_class_name_relative(
+                item, website["price_locator"][1]
+            )
         except NoSuchElementException as e:
             return None
 
-    for _ in range(6):  # Fetch product names for the first 6 items
+    def extract_product_name(product_name_element):
+        if (
+            website["url"] == "https://www.flipkart.com"
+            and product_name_element.get_attribute("class") != "_4rR01T"
+        ):
+            return product_name_element.get_attribute("title")
+        else:
+            return product_name_element.text
+
+    for _ in range(10):  # Fetch product names for the first 6 items
+        # Iterate through each set of class names
+        for class_names_set in class_names_sets:
+            try:
+                product_name_element = get_product_name_element(
+                    sibling_item, class_names_set
+                )
+
+                if product_name_element:
+                    product_name = extract_product_name(product_name_element)
+                    # Calculate the similarity score for the product name
+                    similarity_score = fuzz.token_sort_ratio(product, product_name)
+
+                    if similarity_score > max_similarity_score:
+                        # Update the maximum similarity score and the corresponding item
+                        max_similarity_score = similarity_score
+                        max_similarity_item = sibling_item
+
+            except NoSuchElementException as e:
+                # Log the exception and move on to the next set of class names
+                logging.info(
+                    f'NoSuchElementException: {e}, Website: {website["url"]}, Product: {product}'
+                )
+                continue
         try:
-            product_name_element = get_product_name_element(sibling_item, class_names_set1)
-
-            if product_name_element is None:
-                product_name_element = get_product_name_element(sibling_item, class_names_set2)
-
-            product_name = product_name_element.text if product_name_element else ""
-            
-            # Calculate the similarity score for the product name
-            similarity_score = fuzz.token_sort_ratio(product, product_name)
-
-            if similarity_score > max_similarity_score:
-                # Update the maximum similarity score and the corresponding item
-                max_similarity_score = similarity_score
-                max_similarity_item = sibling_item
-
-        except NoSuchElementException as e:
-            # Skip to the next item if NoSuchElementException occurs
-            logging.debug(
-                f'NoSuchElementException: {e}, Website: {website["url"]}, Product: {product}'
+            sibling_item = wait_and_get_element_by_xpath_relative(
+                sibling_item, "./following-sibling::*"
             )
-            logging.info("Skipping the current item due to NoSuchElementException.")
-            pass
-
-        try:
-            sibling_item = wait_and_get_element_by_xpath_relative(sibling_item, "./following-sibling::*")
         except NoSuchElementException:
             # Break the loop if there are no more sibling items
-            print("No more sibling items found.")
+            logging.info("No more siblings found")
             break
 
-    if max_similarity_item and max_similarity_score > 50:
+    if max_similarity_item and max_similarity_score > 70:
         # Get the product name and price based on the item with the maximum similarity score
-        product_name_element = get_product_name_element(max_similarity_item, class_names_set1)
+        for class_names_set in class_names_sets:
+            try:
+                product_name_element = get_product_name_element(
+                    max_similarity_item, class_names_set
+                )
 
-        if product_name_element is None:
-            product_name_element = get_product_name_element(max_similarity_item, class_names_set2)
+                if product_name_element:
+                    product_name = extract_product_name(product_name_element)
+                    price_element = get_price_element(max_similarity_item)
+                    price = price_element.text if price_element else "Price not found"
+                    if "₹" not in price:
+                        price = "₹" + price
 
-        product_name = product_name_element.text if product_name_element else "Name not found"
-        price_element = get_price_element(max_similarity_item)
-        price = price_element.text if price_element else "Price not found"
-        
-        logging.info(
-            f"Found the best match with similarity score {max_similarity_score}: {product_name}"
-        )
-        return website["url"], product_name, price
-    
+                    logging.info(
+                        f"Found the best match with similarity score {max_similarity_score}: {product_name} on {website['url']}"
+                    )
+                    return website["url"], product_name, price
+
+            except NoSuchElementException as e:
+                # Log the exception and move on to the next set of class names
+                logging.debug(
+                    f'NoSuchElementException: {e}, Website: {website["url"]}, Product: {product}'
+                )
+                continue
+
     logging.info(f"No matching product found on {website['url']}")
     return website["url"], "No matching product found", "Price not found"
