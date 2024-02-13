@@ -24,7 +24,6 @@ def search_product(driver, website, product):
             logging.debug(
                 f'NoSuchElementException: {e}, Website: {website["url"]}, Product: {product}'
             )
-            print("First Element not found")
             return website["url"], "No matching product found", "Price not found"
 
         # Pass the first_item argument when calling find_similar_item

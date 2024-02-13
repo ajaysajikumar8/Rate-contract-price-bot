@@ -36,6 +36,7 @@ def create_session():
     return session
 
 chrome_options = Options()
+chrome_options.add_argument("--headless")
 load_dotenv()
 
 def create_webdriver(session):
