@@ -2,7 +2,7 @@
 websites = [
     {
         "url": "https://www.amazon.in",
-        "search_bar_locator": ("xpath", '//*[@id="twotabsearchtextbox"]'),
+        "search_bar_locator": ("xpath", '//*[@id="twotabsearchtextbox"]'),  
         "first_item_locator": (
             "xpath",
             '//*[@id="search"]/div[1]/div[1]/div/span[1]/div[1]/div[3]',
@@ -38,6 +38,13 @@ websites = [
         'first_item_locator': ('xpath', '//*[@id="product-list-back"]/li[1]'),
         'product_name_locator': [('class_name', 'product-title.plp-prod-title')],
         'price_locator': ('class_name', 'amount.plp-srp-new-amount'),
+    },
+    {
+        'url': 'https://www.indiamart.com/',
+        'search_bar_locator': ('xpath', '//*[@id="search-input"]'),
+        'first_item_locator': ('xpath', '//*[@id="prd-1"]'),
+        'product_name_locator': [('class_name', 'prd-name')],
+        'price_locator': ('class_name', 'prc.clr3.fwb.fs18.cp'),
     }
     # Add more websites and their rules as needed
 ]

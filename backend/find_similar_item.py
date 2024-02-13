@@ -83,7 +83,7 @@ def find_similar_item(website, product, first_item):
             logging.info("No more siblings found")
             break
 
-    if max_similarity_item and max_similarity_score > 70:
+    if max_similarity_item and max_similarity_score > 30:
         # Get the product name and price based on the item with the maximum similarity score
         for class_names_set in class_names_sets:
             try:
